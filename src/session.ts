@@ -156,7 +156,8 @@ export class Session implements vscode.Disposable {
         const mods = [... this.files.values()];
 
         const res = await this.ghci.sendCommand([
-            ':set -fno-code -fwrite-interface',
+            // ':set -fno-code -fwrite-interface',
+            ':set -fwrite-interface',
             ':set +c',
             `:load ${mods.map(x => JSON.stringify(`*${x}`)).join(' ')}`
         ], { info: 'Loading' });
@@ -184,6 +185,19 @@ export class Session implements vscode.Disposable {
             { token }
         );
     }
+
+    async loadForDebugging(
+        uri: vscode.Uri,
+        token: vscode.CancellationToken = null
+    ): Promise<string[]> {
+        const module = this.getModuleName(uri.fsPath);
+
+        return await this.ghci.sendCommand(
+            [`:add *${uri.fsPath}`, `:m *${module}`],
+            { token }
+        );
+    }
+
 
     getModuleName(filename: string): string {
         return this.moduleMap.get(filename);

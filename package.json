@@ -10,7 +10,7 @@
     "version": "0.1.20",
     "publisher": "dramforever",
     "engines": {
-        "vscode": "^1.28.0"
+        "vscode": "^1.43.0"
     },
     "categories": [
         "Programming Languages"
@@ -24,7 +24,8 @@
     "icon": "images/vgs-icon.png",
     "activationEvents": [
         "onLanguage:haskell",
-        "onLanguage:literate haskell"
+        "onLanguage:literate haskell",
+        "onDebug"
     ],
     "main": "./out/src/extension",
     "contributes": {
@@ -213,13 +214,64 @@
                     "markdownDescription": "Prefix of the status bar item of this extension"
                 }
             }
-        }
+        },
+        "breakpoints": [{
+            "language": "haskell"
+        }],
+        "debuggers": [{
+            "type": "ghci",
+            "label": "GHCi Debugger",
+            "program": "./out/src/debugger",
+            "runtime": "node",
+            "configurationAttributes": {
+                "launch": {
+                    "required": [
+                        "module",
+                        "function"
+                    ],
+                    "properties": {
+                        "module": {
+                            "type": "string",
+                            "description": "Module containing debugging function.",
+                            "default": "Main"
+                        },
+                        "function": {
+                            "type": "string",
+                            "description": "Debugging function.",
+                            "default": "main"
+                        },
+                        "stopOnEntry": {
+                            "type": "boolean",
+                            "description": "Automatically stop after launch.",
+                            "default": true
+                        },
+                        "trace": {
+                            "type": "boolean",
+                            "description": "Enable logging of the Debug Adapter Protocol.",
+                            "default": true
+                        }
+                    }
+                }
+            },
+            "initialConfigurations": [{
+                "type": "ghci",
+                "request": "launch",
+                "name": "Main.main",
+                "module": "Main",
+                "function": "main",
+                "stopOnEntry": true
+            }]
+        }]
     },
     "scripts": {
         "vscode:prepublish": "tsc -p ./",
         "compile": "tsc -watch -p ./",
         "postinstall": "node ./node_modules/vscode/bin/install",
         "test": "node ./node_modules/vscode/bin/test"
+    },
+    "dependencies": {
+        "await-notify": "1.0.1",
+        "vscode-debugadapter": "1.40.0"
     },
     "devDependencies": {
         "@types/node": "^6.14.9",
