@@ -223,7 +223,7 @@
         "compile": "tsc -p ./",
         "watch": "tsc -watch -p ./",
         "pretest": "npm run compile",
-        "test": "mocha ./out/test/runTest.js",
+        "test": "node ./out/test/runTest.js",
         "coverage": "nyc npm test",
         "prepackage": "npm run compile",
         "package": "vsce package",
