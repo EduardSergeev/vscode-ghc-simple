@@ -166,17 +166,29 @@ async function checkHaskell(
 export function registerDiagnostics(ext: ExtensionState) {
     const diagnosticCollection = vscode.languages.createDiagnosticCollection('ghc-simple');
 
-    const check = (d: vscode.TextDocument) =>
-        checkHaskell(diagnosticCollection, d, ext)
-        .catch(reportError(ext, `Error checking ${d.uri.fsPath}`));
-    const stop = (d: vscode.TextDocument) => stopHaskell(d, ext);
+    const check = (d: vscode.TextDocument) => {
+        const uri = vscode.Uri.file(d.uri.fsPath.endsWith('.git') ? d.uri.fsPath.slice(0, d.uri.fsPath.indexOf('.git')) : d.uri.fsPath);
+        // if (d.uri.scheme === 'file') {
+            console.log(`Checking: '${d.uri.fsPath}' (${d.uri}) ((${uri}))`);
+            checkHaskell(diagnosticCollection, d, ext)
+                .catch(reportError(ext, `Error checking ${d.uri.fsPath}`));
+        // }
+    }
+    const stop = (d: vscode.TextDocument) => {
+        stopHaskell(d, ext);
+        console.log(`Closing ${d.uri.fsPath}...`);
+        const uri = vscode.Uri.file(d.uri.fsPath.endsWith('.git') ? d.uri.fsPath.slice(0, d.uri.fsPath.indexOf('.git')) : d.uri.fsPath);
+        diagnosticCollection.delete(uri);
+        console.log(`Diagnostics:now:`);
+        diagnosticCollection.forEach((u,d,c) => console.log(u.fsPath))
+    }
     const vws = vscode.workspace;
 
     ext.context.subscriptions.push(
         diagnosticCollection,
-        vws.onDidSaveTextDocument(check),
-        vws.onDidOpenTextDocument(check),
-        vws.onDidCloseTextDocument(stop)
+        vws.onDidSaveTextDocument(check, null, ext.context.subscriptions),
+        vws.onDidOpenTextDocument(check, null, ext.context.subscriptions),
+        vws.onDidCloseTextDocument(stop, null, ext.context.subscriptions)
     );
 
     function initialize() {
