@@ -5,8 +5,8 @@ import { Selection } from 'vscode';
 
 const configs = {
   'telemetry.enableTelemetry': false,
-  // 'ghcSimple.replCommand': 'ghci -Wall',
-  // 'ghcSimple.replScope': 'file',
+  'ghcSimple.replCommand': 'ghci -Wall',
+  'ghcSimple.replScope': 'file',
 };
 
 suite('', () => {
