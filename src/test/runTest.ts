@@ -42,7 +42,7 @@ async function main(): Promise<void> {
     ];
 
     // Download VS Code, unzip it and run the integration test
-    process.exitCode = await runTests({
+    process.exit(await runTests({
       vscodeExecutablePath,
       extensionDevelopmentPath,
       extensionTestsPath,
@@ -59,11 +59,11 @@ async function main(): Promise<void> {
         '--disable-telemetry',
         '--do-not-sync'
       ].concat(disabledExtensions.flatMap(ex => ['--disable-extension', ex]))
-    });
+    }));
   } catch (err) {
     console.error('Failed to run tests:');
     console.error(err);
-		process.exitCode = -1;
+		process.exit(-1);
   }
 }
 
