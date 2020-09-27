@@ -21,6 +21,9 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    - name: Setup GHC environment
+      run: echo "::add-path::/opt/ghc/bin"
+
     - run: npm install
 
     - name: Run tests
