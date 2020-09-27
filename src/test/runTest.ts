@@ -8,7 +8,7 @@ import {
   resolveCliPathFromVSCodeExecutablePath
 } from 'vscode-test';
 
-async function main(): Promise<number> {
+async function main(): Promise<void> {
   try {
     // The folder containing the Extension Manifest package.json
     // Passed to `--extensionDevelopmentPath`
@@ -42,7 +42,7 @@ async function main(): Promise<number> {
     ];
 
     // Download VS Code, unzip it and run the integration test
-    return await runTests({
+    process.exitCode = await runTests({
       vscodeExecutablePath,
       extensionDevelopmentPath,
       extensionTestsPath,
@@ -61,9 +61,9 @@ async function main(): Promise<number> {
       ].concat(disabledExtensions.flatMap(ex => ['--disable-extension', ex]))
     });
   } catch (err) {
+    console.error('Failed to run tests:');
     console.error(err);
-    console.error('Failed to run tests');
-		process.exit(1);
+		process.exitCode = -1;
   }
 }
 
