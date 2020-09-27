@@ -63,7 +63,7 @@ async function main(): Promise<void> {
   } catch (err) {
     console.error('Failed to run tests:');
     console.error(err);
-		process.exit(1);
+    process.exit(-1);
   }
 }
 
