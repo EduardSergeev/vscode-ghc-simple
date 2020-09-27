@@ -63,7 +63,7 @@ async function main(): Promise<number> {
   } catch (err) {
     console.error(err);
     console.error('Failed to run tests');
-    return 1;
+		process.exit(1);
   }
 }
 
