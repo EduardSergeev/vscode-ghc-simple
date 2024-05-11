@@ -7,7 +7,7 @@
         "url": "https://github.com/dramforever/vscode-ghc-simple"
     },
     "license": "ISC",
-    "version": "0.2.3",
+    "version": "0.2.4",
     "publisher": "dramforever",
     "engines": {
         "vscode": "^1.40.0"
@@ -231,7 +231,14 @@
     },
     "scripts": {
         "vscode:prepublish": "tsc -p ./",
-        "compile": "tsc -watch -p ./"
+        "compile": "tsc -p ./",
+        "watch": "tsc -watch -p ./",
+        "pretest": "npm run compile",
+        "test": "mocha ./out/test/runTest.js",
+        "coverage": "nyc npm test",
+        "prepackage": "npm run compile",
+        "package": "vsce package",
+        "preupload": "npm run package"
     },
     "devDependencies": {
         "@types/js-yaml": "^4.0.0",
